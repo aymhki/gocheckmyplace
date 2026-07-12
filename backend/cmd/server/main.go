@@ -4,22 +4,19 @@ import (
 	"backend/internal/db"
 	"backend/internal/handlers"
 	"backend/internal/middleware"
-	"context"
 	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
-	ctx := context.Background()
-
-	database, err := db.ConnectDB(ctx, os.Getenv("DATABASE_URL"))
+	database, err := db.ConnectDB(os.Getenv("DATABASE_URL"))
 
 	if err != nil {
-		log.Fatalf("failed to connect to db: %v", err)
+		log.Printf("warning: db not reachable at startup: %v", err)
+	} else {
+		log.Println("connected to db successfully")
 	}
-
-	log.Println("connected to db successfully")
 
 	h := handlers.NewHandler(database)
 
